@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Secure Connect | Communication Platform</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #eef2f7;
+            color: #1f2937;
+        }
+
+        header {
+            background: linear-gradient(135deg, #172554, #2563eb);
+            color: white;
+            padding: 28px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            opacity: 0.9;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 30px auto;
+        }
+
+        .status {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status span {
+            font-weight: bold;
+        }
+
+        .online {
+            color: #16a34a;
+        }
+
+        .offline {
+            color: #dc2626;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 22px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .card h2 {
+            margin-bottom: 18px;
+            color: #1e3a8a;
+            font-size: 21px;
+        }
+
+        .card h3 {
+            margin: 15px 0 10px;
+            font-size: 16px;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 11px;
+            margin-bottom: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        button {
+            border: none;
+            padding: 11px 17px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 4px;
+            background: #2563eb;
+            color: white;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .danger {
+            background: #dc2626;
+        }
+
+        .danger:hover {
+            background: #b91c1c;
+        }
+
+        .success {
+            background: #16a34a;
+        }
+
+        .success:hover {
+            background: #15803d;
+        }
+
+        .warning {
+            background: #d97706;
+        }
+
+        .output {
+            background: #0f172a;
+            color: #d1fae5;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            min-height: 100px;
+            max-height: 300px;
+            overflow: auto;
+            white-space: pre-wrap;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+        }
+
+        .token-box {
+            word-break: break-all;
+            max-height: 150px;
+            overflow: auto;
+        }
+
+        .notes-list {
+            margin-top: 15px;
+        }
+
+        .note {
+            border: 1px solid #dbeafe;
+            background: #eff6ff;
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 10px;
+        }
+
+        .note strong {
+            color: #1e40af;
+        }
+
+        .chat {
+            height: 280px;
+            overflow-y: auto;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .chat-message {
+            background: white;
+            padding: 9px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.06);
+        }
+
+        .system {
+            background: #fef3c7;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            margin-top: 30px;
+            color: #64748b;
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        .small {
+            font-size: 12px;
+            color: #64748b;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🔐 Secure Connect</h1>
+    <p>Secure Communication & Notes Platform</p>
+</header>
+
+<div class="container">
+
+    <!-- SERVER STATUS -->
+
+    <div class="status">
+        <div>
+            Backend Status:
+            <span id="serverStatus" class="offline">Checking...</span>
+        </div>
+
+        <div>
+            JWT:
+            <span id="jwtStatus">Not Logged In</span>
+        </div>
+    </div>
+
+    <div class="grid">
+
+        <!-- SIGNUP -->
+
+        <div class="card">
+
+            <h2>📝 User Signup</h2>
+
+            <input
+                type="text"
+                id="signupUsername"
+                placeholder="Username"
+            >
+
+            <input
+                type="email"
+                id="signupEmail"
+                placeholder="Email"
+            >
+
+            <input
+                type="password"
+                id="signupPassword"
+                placeholder="Password"
+            >
+
+            <button onclick="signup()">
+                Create Account
+            </button>
+
+            <div class="output" id="signupOutput">
+Signup output will appear here...
+            </div>
+
+        </div>
+
+
+        <!-- LOGIN -->
+
+        <div class="card">
+
+            <h2>🔑 Login</h2>
+
+            <input
+                type="email"
+                id="loginEmail"
+                placeholder="Email"
+            >
+
+            <input
+                type="password"
+                id="loginPassword"
+                placeholder="Password"
+            >
+
+            <button onclick="login()">
+                Login
+            </button>
+
+            <button
+                class="danger"
+                onclick="logout()"
+            >
+                Logout
+            </button>
+
+            <div class="output" id="loginOutput">
+Login output will appear here...
+            </div>
+
+        </div>
+
+
+        <!-- PROFILE -->
+
+        <div class="card">
+
+            <h2>👤 Protected Profile</h2>
+
+            <p class="small">
+                Requires a valid JWT token.
+            </p>
+
+            <button
+                class="success"
+                onclick="getProfile()"
+            >
+                Get Profile
+            </button>
+
+            <div class="output" id="profileOutput">
+Profile output will appear here...
+            </div>
+
+        </div>
+
+
+        <!-- ADMIN -->
+
+        <div class="card">
+
+            <h2>🛡️ RBAC / Admin</h2>
+
+            <p class="small">
+                Only users with the admin role can access this endpoint.
+            </p>
+
+            <button
+                class="warning"
+                onclick="getAdminUsers()"
+            >
+                Get All Users
+            </button>
+
+            <div class="output" id="adminOutput">
+Admin output will appear here...
+            </div>
+
+        </div>
+
+
+        <!-- CREATE NOTE -->
+
+        <div class="card">
+
+            <h2>📒 Create Note</h2>
+
+            <input
+                type="text"
+                id="noteTitle"
+                placeholder="Note title"
+            >
+
+            <textarea
+                id="noteContent"
+                placeholder="Note content"
+            ></textarea>
+
+            <button
+                class="success"
+                onclick="createNote()"
+            >
+                Create Note
+            </button>
+
+            <div class="output" id="createNoteOutput">
+Create note output will appear here...
+            </div>
+
+        </div>
+
+
+        <!-- NOTES -->
+
+        <div class="card">
+
+            <h2>📚 Notes</h2>
+
+            <button onclick="getNotes()">
+                Get My Notes
+            </button>
+
+            <button
+                class="danger"
+                onclick="deleteSelectedNote()"
+            >
+                Delete Selected
+            </button>
+
+            <div
+                class="notes-list"
+                id="notesList"
+            >
+                No notes loaded.
+            </div>
+
+        </div>
+
+
+        <!-- UPDATE NOTE -->
+
+        <div class="card">
+
+            <h2>✏️ Update Note</h2>
+
+            <input
+                type="text"
+                id="updateNoteId"
+                placeholder="Note ID"
+            >
+
+            <input
+                type="text"
+                id="updateTitle"
+                placeholder="Updated title"
+            >
+
+            <textarea
+                id="updateContent"
+                placeholder="Updated content"
+            ></textarea>
+
+            <button onclick="updateNote()">
+                Update Note
+            </button>
+
+            <div class="output" id="updateOutput">
+Update output will appear here...
+            </div>
+
+        </div>
+
+
+        <!-- REAL TIME CHAT -->
+
+        <div class="card full">
+
+            <h2>💬 Real-Time Socket.IO Chat</h2>
+
+            <div
+                class="chat"
+                id="chatBox"
+            ></div>
+
+            <input
+                type="text"
+                id="chatUsername"
+                placeholder="Your name"
+            >
+
+            <input
+                type="text"
+                id="chatMessage"
+                placeholder="Type your message..."
+                onkeydown="handleChatKey(event)"
+            >
+
+            <button onclick="joinChat()">
+                Join General Room
+            </button>
+
+            <button
+                class="success"
+                onclick="sendMessage()"
+            >
+                Send Message
+            </button>
+
+        </div>
+
+
+        <!-- API OUTPUT -->
+
+        <div class="card full">
+
+            <h2>🖥️ API Response Console</h2>
+
+            <div
+                class="output"
+                id="globalOutput"
+            >
+Waiting for API request...
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<footer>
+    Lab 4 — Secure Connect and Communication Platform
+    <br>
+    Web Dev III | Unit 4
+</footer>
+
+
+<!-- Socket.IO is served automatically by the Express Socket.IO server -->
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+
+    const API = "/api";
+
+    let token =
+        localStorage.getItem("secureConnectToken") || "";
+
+    let selectedNoteId = "";
+
+
+    // ==========================================
+    // COMMON FUNCTIONS
+    // ==========================================
+
+    function display(elementId, data) {
+
+        const element =
+            document.getElementById(elementId);
+
+        if (typeof data === "string") {
+            element.textContent = data;
+        } else {
+            element.textContent =
+                JSON.stringify(data, null, 2);
+        }
+    }
+
+
+    function updateJWTStatus() {
+
+        const status =
+            document.getElementById("jwtStatus");
+
+        if (token) {
+
+            status.textContent =
+                "Authenticated";
+
+            status.style.color =
+                "#16a34a";
+
+        } else {
+
+            status.textContent =
+                "Not Logged In";
+
+            status.style.color =
+                "#dc2626";
+        }
+    }
+
+
+    function headers(auth = true) {
+
+        const result = {
+            "Content-Type": "application/json"
+        };
+
+        if (auth && token) {
+
+            result.Authorization =
+                "Bearer " + token;
+        }
+
+        return result;
+    }
+
+
+    async function request(
+        url,
+        options = {}
+    ) {
+
+        try {
+
+            const response =
+                await fetch(url, options);
+
+            const data =
+                await response.json();
+
+            display("globalOutput", {
+                status: response.status,
+                response: data
+            });
+
+            return {
+                status: response.status,
+                data
+            };
+
+        } catch (error) {
+
+            display("globalOutput", {
+                error: error.message
+            });
+
+            return {
+                status: 0,
+                data: {
+                    message: error.message
+                }
+            };
+        }
+    }
+
+
+    // ==========================================
+    // SERVER STATUS
+    // ==========================================
+
+    async function checkServer() {
+
+        try {
+
+            const response =
+                await fetch(API + "/health");
+
+            if (response.ok) {
+
+                const status =
+                    document.getElementById(
+                        "serverStatus"
+                    );
+
+                status.textContent =
+                    "Online";
+
+                status.className =
+                    "online";
+
+            }
+
+        } catch {
+
+            const status =
+                document.getElementById(
+                    "serverStatus"
+                );
+
+            status.textContent =
+                "Offline";
+
+            status.className =
+                "offline";
+        }
+    }
+
+
+    // ==========================================
+    // SIGNUP
+    // ==========================================
+
+    async function signup() {
+
+        const username =
+            document.getElementById(
+                "signupUsername"
+            ).value;
+
+        const email =
+            document.getElementById(
+                "signupEmail"
+            ).value;
+
+        const password =
+            document.getElementById(
+                "signupPassword"
+            ).value;
+
+
+        const result =
+            await request(
+                API + "/auth/signup",
+                {
+                    method: "POST",
+                    headers: headers(false),
+                    body: JSON.stringify({
+                        username,
+                        email,
+                        password
+                    })
+                }
+            );
+
+
+        display(
+            "signupOutput",
+            result.data
+        );
+    }
+
+
+    // ==========================================
+    // LOGIN
+    // ==========================================
+
+    async function login() {
+
+        const email =
+            document.getElementById(
+                "loginEmail"
+            ).value;
+
+        const password =
+            document.getElementById(
+                "loginPassword"
+            ).value;
+
+
+        const result =
+            await request(
+                API + "/auth/login",
+                {
+                    method: "POST",
+                    headers: headers(false),
+                    body: JSON.stringify({
+                        email,
+                        password
+                    })
+                }
+            );
+
+
+        display(
+            "loginOutput",
+            result.data
+        );
+
+
+        if (result.data.token) {
+
+            token =
+                result.data.token;
+
+            localStorage.setItem(
+                "secureConnectToken",
+                token
+            );
+
+            updateJWTStatus();
+        }
+    }
+
+
+    // ==========================================
+    // LOGOUT
+    // ==========================================
+
+    function logout() {
+
+        token = "";
+
+        localStorage.removeItem(
+            "secureConnectToken"
+        );
+
+        updateJWTStatus();
+
+        display(
+            "loginOutput",
+            {
+                message:
+                    "Logged out successfully."
+            }
+        );
+    }
+
+
+    // ==========================================
+    // PROFILE
+    // ==========================================
+
+    async function getProfile() {
+
+        const result =
+            await request(
+                API + "/protected/profile",
+                {
+                    method: "GET",
+                    headers: headers(true)
+                }
+            );
+
+
+        display(
+            "profileOutput",
+            result.data
+        );
+    }
+
+
+    // ==========================================
+    // ADMIN
+    // ==========================================
+
+    async function getAdminUsers() {
+
+        const result =
+            await request(
+                API + "/admin/users",
+                {
+                    method: "GET",
+                    headers: headers(true)
+                }
+            );
+
+
+        display(
+            "adminOutput",
+            result.data
+        );
+    }
+
+
+    // ==========================================
+    // CREATE NOTE
+    // ==========================================
+
+    async function createNote() {
+
+        const title =
+            document.getElementById(
+                "noteTitle"
+            ).value;
+
+        const content =
+            document.getElementById(
+                "noteContent"
+            ).value;
+
+
+        const result =
+            await request(
+                API + "/notes",
+                {
+                    method: "POST",
+                    headers: headers(true),
+                    body: JSON.stringify({
+                        title,
+                        content
+                    })
+                }
+            );
+
+
+        display(
+            "createNoteOutput",
+            result.data
+        );
+
+
+        if (result.data.id) {
+
+            selectedNoteId =
+                result.data.id;
+
+            document.getElementById(
+                "updateNoteId"
+            ).value =
+                result.data.id;
+
+            getNotes();
+        }
+    }
+
+
+    // ==========================================
+    // GET NOTES
+    // ==========================================
+
+    async function getNotes() {
+
+        const result =
+            await request(
+                API + "/notes",
+                {
+                    method: "GET",
+                    headers: headers(true)
+                }
+            );
+
+
+        const notesList =
+            document.getElementById(
+                "notesList"
+            );
+
+
+        if (
+            !Array.isArray(result.data) ||
+            result.data.length === 0
+        ) {
+
+            notesList.innerHTML =
+                "<p>No notes found.</p>";
+
+            return;
+        }
+
+
+        notesList.innerHTML = "";
+
+
+        result.data.forEach(note => {
+
+            const div =
+                document.createElement("div");
+
+            div.className =
+                "note";
+
+
+            div.innerHTML = `
+                <strong>${escapeHTML(note.title)}</strong>
+
+                <p>
+                    ${escapeHTML(note.content)}
+                </p>
+
+                <p class="small">
+                    ID: ${note.id}
+                </p>
+
+                <button
+                    onclick="selectNote('${note.id}')"
+                >
+                    Select
+                </button>
+            `;
+
+
+            notesList.appendChild(div);
+        });
+    }
+
+
+    // ==========================================
+    // SELECT NOTE
+    // ==========================================
+
+    function selectNote(id) {
+
+        selectedNoteId = id;
+
+        document.getElementById(
+            "updateNoteId"
+        ).value = id;
+
+        display(
+            "globalOutput",
+            {
+                message:
+                    "Selected note",
+                noteId: id
+            }
+        );
+    }
+
+
+    // ==========================================
+    // UPDATE NOTE
+    // ==========================================
+
+    async function updateNote() {
+
+        const id =
+            document.getElementById(
+                "updateNoteId"
+            ).value;
+
+        const title =
+            document.getElementById(
+                "updateTitle"
+            ).value;
+
+        const content =
+            document.getElementById(
+                "updateContent"
+            ).value;
+
+
+        if (!id) {
+
+            display(
+                "updateOutput",
+                {
+                    message:
+                        "Enter or select a Note ID."
+                }
+            );
+
+            return;
+        }
+
+
+        const result =
+            await request(
+                API + "/notes/" + id,
+                {
+                    method: "PUT",
+                    headers: headers(true),
+                    body: JSON.stringify({
+                        title,
+                        content
+                    })
+                }
+            );
+
+
+        display(
+            "updateOutput",
+            result.data
+        );
+
+
+        getNotes();
+    }
+
+
+    // ==========================================
+    // DELETE NOTE
+    // ==========================================
+
+    async function deleteSelectedNote() {
+
+        const id =
+            selectedNoteId ||
+            document.getElementById(
+                "updateNoteId"
+            ).value;
+
+
+        if (!id) {
+
+            display(
+                "globalOutput",
+                {
+                    message:
+                        "Select a note first."
+                }
+            );
+
+            return;
+        }
+
+
+        const result =
+            await request(
+                API + "/notes/" + id,
+                {
+                    method: "DELETE",
+                    headers: headers(true)
+                }
+            );
+
+
+        display(
+            "globalOutput",
+            result.data
+        );
+
+
+        selectedNoteId = "";
+
+        getNotes();
+    }
+
+
+    // ==========================================
+    // SOCKET.IO
+    // ==========================================
+
+    const socket =
+        io();
+
+
+    socket.on(
+        "connect",
+        () => {
+
+            addChatMessage(
+                "System",
+                "Connected to Socket.IO server.",
+                true
+            );
+        }
+    );
+
+
+    socket.on(
+        "systemMessage",
+        data => {
+
+            addChatMessage(
+                "System",
+                data.message,
+                true
+            );
+        }
+    );
+
+
+    socket.on(
+        "chatMessage",
+        data => {
+
+            addChatMessage(
+                data.username,
+                data.message,
+                false
+            );
+        }
+    );
+
+
+    function joinChat() {
+
+        socket.emit(
+            "joinRoom",
+            "general"
+        );
+    }
+
+
+    function sendMessage() {
+
+        const username =
+            document.getElementById(
+                "chatUsername"
+            ).value ||
+            "Anonymous";
+
+        const message =
+            document.getElementById(
+                "chatMessage"
+            ).value;
+
+
+        if (!message.trim()) {
+            return;
+        }
+
+
+        socket.emit(
+            "chatMessage",
+            {
+                room: "general",
+                username,
+                message
+            }
+        );
+
+
+        document.getElementById(
+            "chatMessage"
+        ).value = "";
+    }
+
+
+    function handleChatKey(event) {
+
+        if (event.key === "Enter") {
+
+            sendMessage();
+        }
+    }
+
+
+    function addChatMessage(
+        username,
+        message,
+        system = false
+    ) {
+
+        const chat =
+            document.getElementById(
+                "chatBox"
+            );
+
+
+        const div =
+            document.createElement("div");
+
+
+        div.className =
+            "chat-message" +
+            (system ? " system" : "");
+
+
+        div.innerHTML = `
+            <strong>
+                ${escapeHTML(username)}
+            </strong>
+
+            : ${escapeHTML(message)}
+        `;
+
+
+        chat.appendChild(div);
+
+        chat.scrollTop =
+            chat.scrollHeight;
+    }
+
+
+    // ==========================================
+    // SECURITY
+    // ==========================================
+
+    function escapeHTML(value) {
+
+        return String(value)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+
+
+    // ==========================================
+    // INITIALIZATION
+    // ==========================================
+
+    updateJWTStatus();
+
+    checkServer();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,166 @@
+{
+  "info": {
+    "_postman_id": "7d3bbf3b-7e7d-4c19-ae19-4f0c8e6d4a41",
+    "name": "Lab 4 - Secure Connect Communication Platform",
+    "description": "Complete API tests for Lab 4. Import this collection into Postman. Run Signup first, then Login. Login stores the JWT automatically in the collection variable {{token}}. Create Note stores {{noteId}}.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000" },
+    { "key": "token", "value": "" },
+    { "key": "noteId", "value": "" },
+    { "key": "userEmail", "value": "student{{$timestamp}}@example.com" },
+    { "key": "userPassword", "value": "Pass12345" }
+  ],
+  "item": [
+    {
+      "name": "Health & Root",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/health" }
+        },
+        {
+          "name": "API Root",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/" }
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Signup",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"student\",\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{userPassword}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/signup"
+          }
+        },
+        {
+          "name": "Login",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "const json = pm.response.json();",
+                "if (json.token) pm.collectionVariables.set('token', json.token);",
+                "if (json.user && json.user.email) pm.collectionVariables.set('userEmail', json.user.email);"
+              ]
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{userPassword}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/login"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Protected & RBAC",
+      "item": [
+        {
+          "name": "Profile - Protected",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/protected/profile"
+          }
+        },
+        {
+          "name": "Admin Users - Should Be 403 for Normal User",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/admin/users"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notes CRUD",
+      "item": [
+        {
+          "name": "Get Notes - Protected",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/notes"
+          }
+        },
+        {
+          "name": "Create Note",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "const json = pm.response.json();",
+                "if (json.id) pm.collectionVariables.set('noteId', json.id);"
+              ]
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"My First Note\",\n  \"content\": \"This is a secure note for Lab 4.\"\n}"
+            },
+            "url": "{{baseUrl}}/api/notes"
+          }
+        },
+        {
+          "name": "Get Note By ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/notes/{{noteId}}"
+          }
+        },
+        {
+          "name": "Update Note",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Note\",\n  \"content\": \"The note has been updated successfully.\"\n}"
+            },
+            "url": "{{baseUrl}}/api/notes/{{noteId}}"
+          }
+        },
+        {
+          "name": "Delete Note",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/notes/{{noteId}}"
+          }
+        },
+        {
+          "name": "Notes Without Token - Should Be 401",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/notes"
+          }
+        }
+      ]
+    }
+  ]
+}
