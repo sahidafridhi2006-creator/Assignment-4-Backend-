@@ -151,3 +151,22 @@ Clients join a room and exchange `chatMessage` events in real time.
 - 404: resource not found
 - 409: duplicate email
 - 500: unexpected server error
+
+<img width="1917" height="1026" alt="Screenshot 2026-11-25 230606" src="https://github.com/user-attachments/assets/c1695ec0-e158-44ad-b7f8-31f00d2bb2a0" />
+<img width="1917" height="1032" alt="Screenshot 2026-11-25 230622" src="https://github.com/user-attachments/assets/295bbceb-7690-42b6-9a01-768b32a78a22" />
+<img width="1917" height="1027" alt="Screenshot 2026-11-25 230642" src="https://github.com/user-attachments/assets/a56400be-2106-4c4a-83e1-32fe7000176e" />
+<img width="1917" height="1028" alt="Screenshot 2026-11-25 230724" src="https://github.com/user-attachments/assets/f6b54e8a-02ca-462a-b307-be80da6a2172" />
+<img width="437" height="330" alt="Screenshot 2026-11-25 230936" src="https://github.com/user-attachments/assets/a1e12907-1284-40bb-8c0a-2a69d5c8e9c2" />
+<img width="436" height="268" alt="Screenshot 2026-11-25 231104" src="https://github.com/user-attachments/assets/dfb1de92-df08-4979-a59c-d07c466d5dea" />
+<img width="436" height="270" alt="Screenshot 2026-11-25 231115" src="https://github.com/user-attachments/assets/81e45c24-f592-4193-9f6f-4bdd1080a9ad" />
+<img width="432" height="141" alt="Screenshot 2026-11-25 231126" src="https://github.com/user-attachments/assets/c414f696-f4b9-4fd9-9018-26d911eb0244" />
+<img width="441" height="132" alt="Screenshot 2026-11-25 231139" src="https://github.com/user-attachments/assets/5a7a1a0b-8e6d-444a-8351-6e5124e1ed0f" />
+<img width="435" height="220" alt="Screenshot 2026-11-25 231347" src="https://github.com/user-attachments/assets/8db53a65-0cd6-4085-a1fa-ad74bfb27dd7" />
+
+
+
+
+
+
+
+
